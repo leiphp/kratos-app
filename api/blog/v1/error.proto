@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package api.blog.v1;
+
+option go_package = "kratos-app/api/blog/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.blog.v1";
+
+import "errors/errors.proto";
+
+enum ErrorReason {
+	option (errors.default_code) = 500;
+
+	BLOG_INVALID_ID = 0;
+}

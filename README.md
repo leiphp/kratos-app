@@ -17,6 +17,13 @@ kratos proto client api/server/server.proto
 # Generate the source code of service by proto file
 kratos proto server api/server/server.proto -t internal/service
 
+# 生成proto模板
+kratos proto add api/blog/v1/blog.proto
+# 生成proto源码
+kratos proto client api/blog/v1/blog.proto
+# 生成server模板
+kratos proto server api/blog/v1/blog.proto -t internal/service
+
 go generate ./...
 go build -o ./bin/ ./...
 ./bin/server -conf ./configs
