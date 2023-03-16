@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package api.account.v1;
+
+option go_package = "kratos-app/api/account/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.account.v1";
+
+import "google/api/annotations.proto";
+
+service Account {
+	rpc Login (LoginRequest) returns (LoginReply) {
+		option (google.api.http) = {
+			post: "/account/login"
+			body: "*"
+		};
+	}
+	rpc Register (RegisterRequest) returns (RegisterReply) {
+		option (google.api.http) = {
+			post: "/account/register"
+			body: "*"
+		};
+	}
+	// 获取用户信息
+	rpc Info (InfoRequest) returns (InfoReply) {
+		option (google.api.http) = {
+			get: "/account/info"
+		};
+	};
+}
+
+message LoginRequest {
+	string phone = 1;
+	string password = 2;
+}
+
+message LoginReply {
+	string token = 1;
+}
+
+message RegisterRequest {
+	string phone = 1;
+	string password = 2;
+}
+
+message RegisterReply {
+}
+
+message InfoRequest {
+}
+
+message InfoReply {
+	uint32 id = 1; // 用户id
+	string username = 2; // 用户名
+	string avatar = 3; // 头像
+}

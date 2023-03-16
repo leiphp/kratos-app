@@ -23,6 +23,14 @@ kratos proto add api/blog/v1/blog.proto
 kratos proto client api/blog/v1/blog.proto
 # 生成server模板
 kratos proto server api/blog/v1/blog.proto -t internal/service
+#生成配置文件roto源码
+kratos proto client internal/conf/conf.proto
+
+#而使用CLI有两种途径可以走：直接使用命令行执行命令，还有一种就是利用了go的go:generate特性。
+# ent生产代码
+ent generate ./schema
+#通过 generate.go 生成
+go generate ./...
 
 go generate ./...
 go build -o ./bin/ ./...

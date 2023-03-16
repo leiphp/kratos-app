@@ -9,6 +9,7 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
+	"gorm.io/gorm"
 	"kratos-app/internal/conf"
 	"kratos-app/internal/data/ent"
 
@@ -18,16 +19,18 @@ import (
 
 	// init mysql driver
 	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/driver/mysql"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewGreeterRepo, NewArticleRepo)
+var ProviderSet = wire.NewSet(NewData, NewGreeterRepo, NewArticleRepo, NewUserRepo)
 
 // Data .
 type Data struct {
 	// TODO wrapped database client
 	db  *ent.Client
 	rdb *redis.Client
+	db2 *gorm.DB
 }
 
 // NewData .
@@ -36,6 +39,10 @@ func NewData(conf *conf.Data, logger log.Logger) (*Data, func(), error) {
 	//	log.NewHelper(logger).Info("closing the data resources")
 	//}
 	//return &Data{}, cleanup, nil
+	db2, err := gorm.Open(mysql.Open(conf.GetDatabase().GetSource()), &gorm.Config{})
+	if err != nil {
+		return nil, nil, err
+	}
 
 	log := log.NewHelper(logger)
 	drv, err := sql.Open(
@@ -78,6 +85,7 @@ func NewData(conf *conf.Data, logger log.Logger) (*Data, func(), error) {
 	d := &Data{
 		db:  client,
 		rdb: rdb,
+		db2:  db2,
 	}
 	return d, func() {
 		log.Info("message", "closing the data resources")
