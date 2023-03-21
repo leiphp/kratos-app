@@ -11,6 +11,7 @@ import (
 	"context"
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	v1 "kratos-app/api/account/v1"
 	"kratos-app/internal/biz"
 )
@@ -44,4 +45,17 @@ func (a *AccountService) Register(ctx context.Context, request *v1.RegisterReque
 		return nil, errors.New(500, "注册失败", err.Error())
 	}
 	return &v1.RegisterReply{}, nil
+}
+
+func (a *AccountService) Info(ctx context.Context, request *v1.InfoRequest) (*v1.InfoReply, error) {
+	claims, _ := jwt.FromContext(ctx)
+	userInfo, err := a.auc.UserInfo(ctx, claims.(*biz.MyJwtClaims).Uid)
+	if err != nil {
+		return nil, errors.New(500, "获取用户信息失败", err.Error())
+	}
+	return &v1.InfoReply{
+		Id:       userInfo.ID,
+		Username: userInfo.Username,
+		Avatar:   userInfo.Avatar,
+	}, nil
 }

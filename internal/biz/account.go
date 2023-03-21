@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
 	"kratos-app/internal/conf"
+	"time"
 )
 
 var (
@@ -30,6 +31,8 @@ type User struct {
 	Password string // 密码
 	Nickname string // 昵称
 	Avatar   string // 头像
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type UserRepo interface {

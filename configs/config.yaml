@@ -17,3 +17,6 @@ data:
 auth:
   jwt_secret: "secret"
   expire_duration: 3600s
+  white_list:
+    - /api.account.v1.Account/Login
+    - /api.account.v1.Account/Register
